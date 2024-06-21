@@ -147,6 +147,7 @@ renderizarProductos(contenedorIndex, peliculas.productos, 6);
 // RENDERIZADO POR CATEGORIA
 const categoriasLinks = document.querySelectorAll('.categoriaslist-container a');
 let filtroAplicado = null;
+let verMenosActivado = false
 
 categoriasLinks.forEach(link => {
     link.addEventListener('click', (e) => {
