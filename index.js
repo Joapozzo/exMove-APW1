@@ -107,76 +107,77 @@ const peliculas = {
     ]
 };
 
-const contenedorIndex = document.getElementById('productos-contenedor')
-const comediaCategoria = document.getElementById('categoria-comedia')
-const botonVerMas = document.getElementById('ver-mas')
-const categoriaContenedor = document.getElementById('categorias')
+const contenedorIndex = document.getElementById('productos-contenedor');
+const botonVerMas = document.getElementById('ver-mas');
+const categoriaContenedor = document.getElementById('categorias');
 
-//Renderizado estandar
+// Renderizado estándar
 function renderizarProductos(contenedor, productos, limite) {
-    let contenedorHtml = ''
-    productos.slice(0,limite).forEach((producto) => {
-    const {img, nombre, desc, duracion} = producto
-    contenedorHtml += `
-    <div class="product">
-        <img src="${img}" alt="" class="product-img">
-        <div class="container">
-            <div class="title-container">
-                <h3>${nombre}</h3>
-            </div>
-            <div class="hover-container">
-                <p>${desc}</p>
-                <div class="product-reserva">
-                    <p>Duracion: ${duracion} minutos</p>
-                    <div class="quantity-container">
-                        <span>Cantidad</span>
-                        <input type="number">
+    let contenedorHtml = '';
+    productos.slice(0, limite).forEach((producto) => {
+        const { img, nombre, desc, duracion } = producto;
+        contenedorHtml += `
+        <div class="product">
+            <img src="${img}" alt="" class="product-img">
+            <div class="container">
+                <div class="title-container">
+                    <h3>${nombre}</h3>
+                </div>
+                <div class="hover-container">
+                    <p>${desc}</p>
+                    <div class="product-reserva">
+                        <p>Duracion: ${duracion} minutos</p>
+                        <div class="quantity-container">
+                            <span>Cantidad</span>
+                            <input type="number">
+                        </div>
+                        <button class="button-reserva" id="id-botonReserva">Reservar</button>
                     </div>
-                    <button class="button-reserva" id="id-botonReserva">Reservar</button>
                 </div>
             </div>
         </div>
-    </div>
-    `
-})
-    contenedor.innerHTML = contenedorHtml
+        `;
+    });
+    contenedor.innerHTML = contenedorHtml;
 }
-renderizarProductos(contenedorIndex, peliculas.productos, 6)
+renderizarProductos(contenedorIndex, peliculas.productos, 6);
+
 //--------------------------------------------------------------------------------//
 
-//RENDERIZADO POR CATEGORIA
-
-//Agregamos este filtro para poder determinar cuando esta activado o no para renderizar el contenido default al doble click
+// RENDERIZADO POR CATEGORIA
 const categoriasLinks = document.querySelectorAll('.categoriaslist-container a');
 let filtroAplicado = null;
 
 categoriasLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        //Añadi este atributo para facitilar la obtencion de la categoria, ya que en mi caso se dificultaba mas.
         const categoria = link.getAttribute('data-categoria');
 
         if (filtroAplicado === categoria) {
             renderizarProductos(contenedorIndex, peliculas.productos, 6);
             link.classList.remove('active');
             filtroAplicado = null;
+            botonVerMas.classList.remove('hidden');
+            verMenosActivado = false;
+            botonVerMas.innerHTML = 'Ver más';
         } else {
             const peliculasCategoria = peliculas.productos.filter((producto) => {
                 return producto.categoria === categoria;
             });
             renderizarProductos(contenedorIndex, peliculasCategoria, 12);
-            //Recorrer los links y eliminar la clase active para mejorar la UI de la web
             categoriasLinks.forEach(link => link.classList.remove('active'));
             link.classList.add('active');
             filtroAplicado = categoria;
+            botonVerMas.classList.add('hidden');
+            verMenosActivado = false;
+            botonVerMas.innerHTML = 'Ver más';
         }
     });
 });
 
 //---------------------------------------------------------------------------------//
-// Logica para ver menos y ver mas
-let verMenosActivado = false
-botonVerMas.addEventListener('click', (e)=>{
+// Lógica para ver menos y ver más
+botonVerMas.addEventListener('click', (e) => {
     e.preventDefault();
     if (!verMenosActivado) {
         renderizarProductos(contenedorIndex, peliculas.productos, 12);
@@ -185,10 +186,8 @@ botonVerMas.addEventListener('click', (e)=>{
     } else {
         renderizarProductos(contenedorIndex, peliculas.productos, 6);
         botonVerMas.innerHTML = 'Ver más';
-        window.scrollTo(categoriaContenedor)
-        categoriaContenedor.scrollIntoView({ behavior: 'smooth' }); 
+        categoriaContenedor.scrollIntoView({ behavior: 'smooth' });
         verMenosActivado = false;
     }
-})
-
+});
 
